@@ -20,6 +20,10 @@
 2.引入ReProver：使用检索来显式地选择前提    
 给定当前的证明状态，它检索少量可能有用的前提，并在状态和检索的前提的连接上生成策略。在证明时，该模型在每一步都会生成多个策略候选项，这些候选项被运用于最佳优先搜索算法以寻找证明  
 该检索器建立在DRP的基础上并有两个算法创新：（1）在证明定理时不是所有前提都是可访问的，Leandojo对Lean代码执行程序分析确认可访问的前提，将检索限制在可访问的前提中，包括定理之前在同一文件中定义的前提和从其他文件导入的前提（2）提出In-file negatives： a simple mechanism to find hard negatives in premise selection, which samples negative premises defined in the same Lean source file as the ground truth premise.（？）  
-3.以编程方式与Lean进行交互：Leandojo将Lean变成一个类似健身房（gym-like）的环境，在这个环境中，证明器可以观察证明状态，运行策略来改变状态，并接收错误或证明完成的反馈  
+3.以编程方式与Lean进行交互：Leandojo将Lean变成一个gym-like的环境，在这个环境中，证明器可以观察证明状态，运行策略来改变状态，并接收错误或证明完成的反馈  
 4.构建了一个用于前提选择和定理证明的基准--Leandojo基准（由Lean的数学库中的98734个定理和证明组成），并创建了一个具有挑战性的数据分割--novel_premises，要求证明器推广到依赖于从未在训练中使用过的新前提的定理    
 # 实验
+在Leandojo 基准上对ReProver进行评估  
+1.前提选择  
+在Leandojo基准中选择至少有一个前提的策略，使用策略前的状态来检索100个前提，并计算信息检索中的标准指标 R@k（检索到的前k个前提的召回率）和MRR（平均倒数秩）
+分别与经典BM25，从所有前提中检索以及没有In-file negatives 进行对比，ReProver的两项指标均高于以上三种
